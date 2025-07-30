@@ -1,35 +1,27 @@
-import { createContext, useContext,  useState, ReactNode } from "react"
+import Button from "@/components/common/Button";
+import { useCount } from "@/context/CountContext";
 
-interface CountContextProps {
-  count: number
-  increment: () => void
-  decrement: () => void
-}
-
-export const CountContext = createContext<CountContextProps | undefined>(undefined)
-
-export const CountProvider = ({ children }: { children: ReactNode}) => {
-
-  const [count, setCount] = useState<number>(0)
-
-  const increment = () => setCount((count ) =>count + 1)
-  const decrement = () => setCount((count) => count > 0 ? count - 1 : 0)
+const CounterAppPage = () => {
+  const { count, increment, decrement } = useCount();
 
   return (
-    <CountContext.Provider value={{ count, increment, decrement }}>
-      {children}
-    </CountContext.Provider>
-  )
-}
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center text-center">
+      <h1 className="text-4xl font-bold text-gray-800 mb-4">Counter App</h1>
+      <p className="text-6xl font-bold text-gray-700 my-8">{count}</p>
+      <div className="flex gap-6">
+        <Button
+          buttonLabel="Increment"
+          onClick={increment}
+          buttonBackgroundColor="green"
+        />
+        <Button
+          buttonLabel="Decrement"
+          onClick={decrement}
+          buttonBackgroundColor="red"
+        />
+      </div>
+    </div>
+  );
+};
 
-
-
-export const useCount = () => {
-  const context = useContext(CountContext)
-
-  if (!context) {
-    throw new Error("useCount must be within a Count Provider")
-  }
-
-  return context
-}
+export default CounterAppPage;
